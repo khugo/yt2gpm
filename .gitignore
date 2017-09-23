@@ -1,6 +1,7 @@
 .vscode/
 downloads/
-env/
+tmp/
+venv/
 config.py
 
 # Created by https://www.gitignore.io/api/python

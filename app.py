@@ -16,12 +16,9 @@ def get_playlists():
 
 @app.route("/playlists/<playlist_id>/add", methods=["POST"])
 def add_to_playlist(playlist_id):
-    print(request.data)
     payload = request.get_json()
     video_url = payload["video_url"]
-    if not video_url:
-        return error("video_url must be included", 400)
-    musicmanager.download_song(video_url)
+    musicmanager.download_and_upload_song(video_url, payload.get("metadata"))
     return "OK", 200
 
 def error(message, status_code):
