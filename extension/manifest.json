@@ -3,6 +3,9 @@
   "name": "YouTube to Google Play Music (YT2GPM)",
   "description": "This extension allows you to add YouTube videos to your Google Play Music playlists.",
   "version": "1.0",
+  "background": {
+    "scripts": ["background/api.js"]
+  },
   "content_scripts": [
     {
       "matches": ["*://youtube.com/*", "*://www.youtube.com/*"],

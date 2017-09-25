@@ -1,18 +1,20 @@
 import json
-from flask import Flask, request
+from flask import Flask, request, make_response
 from gmusicapi.clients import Mobileclient
 import config
 import musicmanager
 
 client = Mobileclient()
-#success = client.login(config.EMAIL, config.PASSWORD, Mobileclient.FROM_MAC_ADDRESS)
-#print("Successfully logged in") if success else print("Failed to login")
+success = client.login(config.EMAIL, config.PASSWORD, Mobileclient.FROM_MAC_ADDRESS)
+print("Successfully logged in") if success else print("Failed to login")
 
 app = Flask(__name__)
 
 @app.route("/playlists", methods=["GET"])
 def get_playlists():
-    return json.dumps(client.get_all_playlists())
+    resp = make_response(json.dumps({"playlists": client.get_all_playlists()}), 200)
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    return resp
 
 @app.route("/playlists/<playlist_id>/add", methods=["POST"])
 def add_to_playlist(playlist_id):
