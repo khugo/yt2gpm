@@ -6,10 +6,8 @@
   "background": {
     "scripts": ["background/api.js"]
   },
-  "content_scripts": [
-    {
-      "matches": ["*://youtube.com/watch*", "*://www.youtube.com/watch*"],
-      "js": ["index.js"]
-    }
-  ]
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "index.html"
+  }
 }
