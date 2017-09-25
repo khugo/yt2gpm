@@ -1,5 +1,37 @@
+const insertAddButton = () => {
+  const addBtn = createAddButton();
+  if (!addBtn) {
+    // Description hasn't loaded yet, wait
+    return setTimeout(insertAddButton, 100);
+  }
+  addBtn.addEventListener("click", function () {
+    fetchPlaylists()
+      .then(p => console.log(p));
+  });
+};
+
+const createAddButton = () => {
+  const ytAddBtn = document.querySelector(`button[aria-label="Add to"]`);
+  if (!ytAddBtn) return;
+  // Deep clone doesn't work for some reason, clone manually and append
+  const childClone = ytAddBtn.parentNode.cloneNode(true);
+  const parentClone = ytAddBtn.parentNode.parentNode.cloneNode(true);
+  parentClone.appendChild(childClone);
+  parentClone.title = "Add to Google Play Music";
+
+  const btnRow = ytAddBtn.parentNode.parentNode.parentNode;
+  btnRow.appendChild(parentClone);
+  return parentClone;
+};
+
+let playlistCache = [];
 const fetchPlaylists = () => {
-  return sendMessage("FETCH_PLAYLISTS");
+  if (playlistCache.length > 0) return Promise.resolve(playlistCache);
+  return sendMessage("FETCH_PLAYLISTS")
+    .then(playlists => {
+      playlistCache = playlists;
+      return playlists;
+    });
 };
 
 const sendMessage = (type, payload) => {
@@ -13,4 +45,5 @@ const sendMessage = (type, payload) => {
     });
   });
 };
-fetchPlaylists();
+
+insertAddButton();
