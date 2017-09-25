@@ -8,7 +8,7 @@ const sendMessage = (type, payload) => {
     chrome.extension.sendMessage({ type, payload }, response => {
       console.log("[Receive]", response);
       if (!response) return reject(new Error("Received empty response from background script"));
-      if (response.error) return reject(response.error);
+      if (response.error) return reject(new Error(response.error));
       resolve(response.payload);
     });
   });
