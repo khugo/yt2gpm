@@ -4,10 +4,15 @@ const insertAddButton = () => {
     // Description hasn't loaded yet, wait
     return setTimeout(insertAddButton, 100);
   }
-  addBtn.addEventListener("click", function () {
-    fetchPlaylists()
-      .then(p => console.log(p));
-  });
+  addBtn.addEventListener("click", showAddToPlaylistMenu);
+};
+
+const showAddToPlaylistMenu = () => {
+  const html = `<div class="yt2gpm menu">Text</div>`;
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/xml");
+  const app = document.querySelector("body");
+  app.appendChild(doc.firstChild);
 };
 
 const createAddButton = () => {
