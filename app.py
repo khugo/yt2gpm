@@ -39,9 +39,9 @@ def get_playlists():
 @app.route("/playlists/<playlist_id>/add", methods=["POST", "OPTIONS"])
 @crossdomain()
 def add_to_playlist(playlist_id):
-    payload = request.get_json()
-    video_url = payload["video_url"]
-    musicmanager.download_and_upload_song(video_url, payload.get("metadata"))
+    body = request.get_json()
+    video_url = body["video_url"]
+    musicmanager.download_and_upload_song(video_url, body["metadata"])
     return "OK", 200
 
 def error(message, status_code):

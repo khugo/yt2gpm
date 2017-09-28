@@ -3,6 +3,8 @@ downloads/
 tmp/
 venv/
 config.py
+build/
+node_modules/
 
 # Created by https://www.gitignore.io/api/python
 

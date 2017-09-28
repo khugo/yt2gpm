@@ -1,8 +1,8 @@
-import youtube_dl
 import uuid
 import config
 import os
 import errno
+import youtube_dl
 
 def download_and_upload_song(youtube_url, metadata = {}):
     print(youtube_url)
@@ -31,7 +31,10 @@ def download_song(youtube_url, metadata):
             },
             {
                 "key": "FFmpegMetadata",
-                "metadata": metadata
+                "metadata": {
+                    "title": metadata["title"],
+                    "artist": metadata["artist"]
+                }
             }
         ]
     }

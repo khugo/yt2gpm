@@ -119,7 +119,18 @@ const buildActionButtonElement = (text, className) => {
                 ${text}
               </button>`;
   return parseHTML(html);
-}
+};
+
+const buildSpinnerElement = () => {
+  const html = `<div class="spinner">
+                  <div class="rect1"></div>
+                  <div class="rect2"></div>
+                  <div class="rect3"></div>
+                  <div class="rect4"></div>
+                  <div class="rect5"></div>
+               </div>`;
+  return parseHTML(html);
+};
 
 const parseHTML = htmlString => {
   const parser = new DOMParser();
