@@ -26,7 +26,7 @@ body {
   padding-bottom: 15px;
 }
 
-.playlist h2 {
+h2.playlist {
   font-size: 20px;
   margin-bottom: 0;
   padding-bottom: 5px;
