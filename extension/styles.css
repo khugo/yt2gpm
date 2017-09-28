@@ -36,9 +36,14 @@ body {
 
 input {
   padding: 10px;
+  margin-top: 3px;
   margin-bottom: 20px;
   width: 100%;
   box-sizing: border-box;
+}
+
+label {
+  font-size: 14px;
 }
 
 button.action {
