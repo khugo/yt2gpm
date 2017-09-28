@@ -6,6 +6,23 @@ const fetchPlaylists = () => {
     .then(json => json.playlists);
 };
 
+const addToPlaylist = (playlistId, videoUrl, title, artist) => {
+  const opts = {
+    method: "POST",
+    body: JSON.stringify({
+      video_url: videoUrl,
+      metadata: {
+        title: title,
+        artist: artist
+      }
+    }),
+    headers: new Headers({
+      "Content-Type": "application/json"
+    })
+  };
+  return fetch(`${ROOT_URL}/playlists/${playlistId}/add`, opts);
+};
+
 const getVideoTitle = async () => {
   const tab = await getActiveTab();
   const title = tab.title;
@@ -36,10 +53,10 @@ const navigateToPlaylists = () => {
   renderPlaylists();
 };
 
-const navigateToAddSong = async selectedPlaylist => {
+const navigateToAddSong = async selectedPlaylistId => {
   const title = await getVideoTitle();
   const url = await getVideoUrl();
-  renderAddSongForm(title);
+  renderAddSongForm(selectedPlaylistId, url, title);
 };
 
 const renderPlaylists = () => {
@@ -51,22 +68,24 @@ const renderPlaylists = () => {
     .then(playlists => {
       playlists.forEach(playlist => {
         const elem = buildPlaylistElement(playlist);
-        elem.addEventListener("click", navigateToAddSong);
+        elem.addEventListener("click", e => navigateToAddSong(e.target.dataset.id));
         content.appendChild(elem);
       });
     });
 };
 
-const renderAddSongForm = (title = "", artist = "") => {
+const renderAddSongForm = (playlistId, videoUrl, title = "", artist = "") => {
   const header = document.querySelector(".header h1");
   header.textContent = "Edit song";
   const content = document.querySelector(".content");
   Array.from(content.children).forEach(c => content.removeChild(c));
-  content.appendChild(buildAddSongFormElement(title, artist));
+  const form = buildAddSongFormElement(title, artist)
+  content.appendChild(form);
   const buttonContainer = parseHTML(`<div class="action-btn-container"></div>`);
   const addToPlaylistBtn = buildActionButtonElement("Add to playlist");
   const backToPlaylistsBtn = buildActionButtonElement("Back to playlists");
 
+  addToPlaylistBtn.addEventListener("click", () => addToPlaylist(playlistId, videoUrl, title, artist))
   backToPlaylistsBtn.addEventListener("click", navigateToPlaylists);
 
   buttonContainer.appendChild(addToPlaylistBtn);
@@ -75,7 +94,7 @@ const renderAddSongForm = (title = "", artist = "") => {
 };
 
 const buildPlaylistElement = playlist => {
-  const html = `<div class="playlist">
+  const html = `<div class="playlist" data-id="${playlist.id}">
                   <h2>${playlist.name}</h2>
                 </div>`;
   return parseHTML(html);

@@ -1,6 +1,6 @@
 import json
 from functools import update_wrapper
-from flask import Flask, request, make_response
+from flask import Flask, request, make_response, current_app
 from gmusicapi.clients import Mobileclient
 import config
 import musicmanager
@@ -13,10 +13,20 @@ app = Flask(__name__)
 
 
 def crossdomain(origin="*"):
+    def get_methods():
+        resp = current_app.make_default_options_response()
+        return resp.headers["allow"]
+
     def decorator(f):
         def wrapped_function(*args, **kwargs):
-            resp = make_response(f(*args, **kwargs))
+            if request.method == "OPTIONS":
+                resp = current_app.make_default_options_response()
+            else:
+                resp = make_response(f(*args, **kwargs))
             resp.headers["Access-Control-Allow-Origin"] = origin
+            resp.headers["Access-Control-Allow-Methods"] = get_methods()
+            resp.headers["Access-Control-Allow-Headers"] = "Content-Type"
+            resp.headers["Access-Control-Max-Age"] = 21600
             return resp
         return update_wrapper(wrapped_function, f)
     return decorator
@@ -26,7 +36,7 @@ def crossdomain(origin="*"):
 def get_playlists():
     return json.dumps({"playlists": client.get_all_playlists()}), 200
 
-@app.route("/playlists/<playlist_id>/add", methods=["POST"])
+@app.route("/playlists/<playlist_id>/add", methods=["POST", "OPTIONS"])
 @crossdomain()
 def add_to_playlist(playlist_id):
     payload = request.get_json()

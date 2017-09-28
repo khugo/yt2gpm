@@ -5,6 +5,7 @@ import os
 import errno
 
 def download_and_upload_song(youtube_url, metadata = {}):
+    print(youtube_url)
     song_path = download_song(youtube_url, metadata)
     filename = os.path.basename(song_path)
     new_path = os.path.join(config.MUSIC_MANAGER_FOLDER, filename)
