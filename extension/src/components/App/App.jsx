@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import PlaylistList from "./PlaylistList.jsx";
-import AddToPlaylist from "./AddToPlaylist.jsx";
+import PlaylistList from "../PlaylistList";
+import AddToPlaylist from "../AddToPlaylist";
 
 const App = props => {
   let view;
