@@ -1,4 +1,5 @@
 import json
+import os
 from functools import update_wrapper
 from flask import Flask, request, make_response, current_app
 import gpm
@@ -44,3 +45,6 @@ def error(message, status_code):
         "message": message
     }
     return json.dumps(body), status_code
+
+if __name__ == "__main__":
+    app.run(port=os.environ.get("PORT", 5000))
