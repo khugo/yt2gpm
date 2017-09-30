@@ -2,7 +2,7 @@ import json
 import os
 from functools import update_wrapper
 from flask import Flask, request, make_response, current_app
-import gpm
+from . import gpm
 
 app = Flask(__name__)
 
