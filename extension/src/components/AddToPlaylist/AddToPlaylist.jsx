@@ -22,14 +22,14 @@ const mapStateToProps = ({ selectedPlaylist, url, title, artist }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  goBackToPlaylists: () => dispatch({
-    type: NAVIGATE_TO,
-    payload: "playlists"
-  }),
+  goBackToPlaylists: () => dispatch({ type: NAVIGATE_TO, payload: "playlists" }),
   submit: (playlistId, videoUrl, title, artist) => {
     dispatch({ type: ADD_TO_PLAYLIST });
     addToPlaylist(playlistId, videoUrl, title, artist)
-      .then(() => dispatch({ type: ADD_TO_PLAYLIST_SUCCES }))
+      .then(() => {
+        dispatch({ type: ADD_TO_PLAYLIST_SUCCESS });
+        dispatch({ type: NAVIGATE_TO, payload: "success" });
+      })
       .catch(e => dispatch({ type: ADD_TO_PLAYLIST_ERROR, payload: e }))
   }  
 });

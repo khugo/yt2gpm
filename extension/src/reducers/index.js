@@ -6,9 +6,11 @@ export const SET_VIDEO_ARTIST = "SET_VIDEO_ARTIST";
 
 export const NAVIGATE_TO = "NAVIGATE_TO";
 export const SELECT_PLAYLIST = "SELECT_PLAYLIST";
+export const DISMISS_ERROR = "DISMISS_ERROR";
 
 export const FETCH_PLAYLISTS = "FETCH_PLAYLISTS";
 export const FETCH_PLAYLISTS_SUCCESS = "FETCH_PLAYLISTS_SUCCESS";
+export const FETCH_PLAYLISTS_ERROR = "FETCH_PLAYLISTS_ERROR";
 export const ADD_TO_PLAYLIST = "ADD_TO_PLAYLIST";
 export const ADD_TO_PLAYLIST_SUCCESS = "ADD_TO_PLAYLIST_SUCCESS";
 export const ADD_TO_PLAYLIST_ERROR = "ADD_TO_PLAYLIST_ERROR";
@@ -47,6 +49,17 @@ const loading = (state = false, action) => {
   return state;
 };
 
+const error = (state = "", action) => {
+  switch (action.type) {
+    case ADD_TO_PLAYLIST_ERROR:
+    case FETCH_PLAYLISTS_ERROR:
+      return action.payload.message;
+    case DISMISS_ERROR:
+      return "";
+  }
+  return state;
+};
+
 const url = (state = "", action) => {
   switch (action.type) {
     case SET_VIDEO_URL:
@@ -76,6 +89,7 @@ export default combineReducers({
   playlists,
   selectedPlaylist,
   loading,
+  error,
   url,
   title,
   artist
