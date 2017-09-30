@@ -1,16 +1,9 @@
 import json
 from functools import update_wrapper
 from flask import Flask, request, make_response, current_app
-from gmusicapi.clients import Mobileclient
-import config
-import musicmanager
-
-client = Mobileclient()
-success = client.login(config.EMAIL, config.PASSWORD, Mobileclient.FROM_MAC_ADDRESS)
-print("Successfully logged in") if success else print("Failed to login")
+import gpm
 
 app = Flask(__name__)
-
 
 def crossdomain(origin="*"):
     def get_methods():
@@ -39,10 +32,9 @@ def get_playlists():
 @app.route("/playlists/<playlist_id>/add", methods=["POST", "OPTIONS"])
 @crossdomain()
 def add_to_playlist(playlist_id):
-    return "OK", 200
     body = request.get_json()
     video_url = body["video_url"]
-    musicmanager.download_and_upload_song(video_url, body["metadata"])
+    gpm.download_and_upload_song(video_url, body["metadata"])
     return "OK", 200
 
 def error(message, status_code):
