@@ -24,7 +24,11 @@ const navigation = (state = "playlists", action) => {
   return state;
 };
 
-const playlists = (state = [{ id: "1", name: "Test" }], action) => {
+const playlists = (state = [], action) => {
+  switch (action.type) {
+    case FETCH_PLAYLISTS_SUCCESS:
+      return action.payload;
+  }
   return state;
 }
 

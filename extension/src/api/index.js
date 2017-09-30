@@ -16,3 +16,9 @@ export const addToPlaylist = (playlistId, videoUrl, title, artist) => {
   };
   return fetch(`${ROOT_URL}/playlists/${playlistId}/add`, opts);
 };
+
+export const fetchPlaylists = () => {
+  return fetch(`${ROOT_URL}/playlists`)
+    .then(response => response.json())
+    .then(json => json.playlists);
+};

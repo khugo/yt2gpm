@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import PlaylistList from "../PlaylistList";
 import AddToPlaylist from "../AddToPlaylist";
-import LoadingSpinner from "../LoadingSpinner";
 import ErrorView from "../ErrorView";
 import SuccessView from "../SuccessView";
 
@@ -12,7 +11,7 @@ const App = props => {
     "add_to_playlist": <AddToPlaylist/>,
     "success": <SuccessView/>
   };
-  const view = props.error ? <ErrorView/> : props.loading ? <LoadingSpinner/> : views[props.navigation];
+  const view = props.error ? <ErrorView/> : views[props.navigation];
 
   return (
     <div className="container">
