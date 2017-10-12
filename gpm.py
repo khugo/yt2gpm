@@ -62,7 +62,6 @@ def poll_for_song(title, artist):
         song = find_song_from_library
     return song
 
-
 def find_song_from_library(title, artist):
     print("Checking if songs exists {} - {}".format(title, artist))
     songs = client.get_all_songs()
@@ -71,3 +70,6 @@ def find_song_from_library(title, artist):
 
 def add_song_to_playlist(playlist_id, song):
     client.add_songs_to_playlist(playlist_id, song["id"])
+
+def get_playlists():
+    return client.get_all_playlists()

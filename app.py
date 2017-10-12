@@ -28,7 +28,7 @@ def crossdomain(origin="*"):
 @app.route("/playlists", methods=["GET"])
 @crossdomain()
 def get_playlists():
-    return json.dumps({"playlists": client.get_all_playlists()}), 200
+    return json.dumps({"playlists": gpm.get_playlists()}), 200
 
 @app.route("/playlists/<playlist_id>/add", methods=["POST", "OPTIONS"])
 @crossdomain()
