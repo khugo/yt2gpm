@@ -1,5 +1,5 @@
 import uuid
-from . import config
+import config
 import os
 import errno
 import time

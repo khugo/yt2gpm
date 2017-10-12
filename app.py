@@ -2,7 +2,7 @@ import json
 import os
 from functools import update_wrapper
 from flask import Flask, request, make_response, current_app
-from . import gpm
+import gpm
 
 app = Flask(__name__)
 
@@ -47,4 +47,4 @@ def error(message, status_code):
     return json.dumps(body), status_code
 
 if __name__ == "__main__":
-    app.run(port=os.environ.get("PORT", 5000))
+    app.run(debug=True)
