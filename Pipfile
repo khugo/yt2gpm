@@ -1,7 +1,9 @@
 [[source]]
+
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
+
 
 [packages]
 
@@ -10,7 +12,7 @@ certifi = "==2017.7.27.1"
 chardet = "==3.0.4"
 click = "==6.7"
 decorator = "==4.1.2"
-flask = "==0.12.2"
+flask = "*"
 future = "==0.16.0"
 gmusicapi = "==10.1.2"
 gpsoauth = "==0.4.1"
@@ -29,13 +31,13 @@ protobuf = "==3.4.0"
 "pyasn1" = "==0.3.6"
 "pyasn1-modules" = "==0.1.4"
 pycryptodomex = "==3.4.7"
-"python-dateutil" = "==2.6.1"
+python-dateutil = "==2.6.1"
 requests = "==2.18.4"
 rsa = "==3.4.2"
 "urllib3" = "==1.22"
 validictory = "==1.1.1"
 werkzeug = "==0.12.2"
-"youtube-dl" = {git = "https://github.com/khugo/youtube-dl.git"}
+youtube-dl = {git = "https://github.com/khugo/youtube-dl.git"}
 gunicorn = "*"
 
 

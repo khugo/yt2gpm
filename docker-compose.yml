@@ -6,3 +6,7 @@ services:
     command: python app.py
     ports:
       - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - HOST=0.0.0.0
