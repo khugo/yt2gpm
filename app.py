@@ -1,10 +1,16 @@
 import json
 import os
 from functools import update_wrapper
-from flask import Flask, request, make_response, current_app
+from flask import Flask, request, make_response, current_app, redirect
+import oauth2client
 import gpm
+import config
 
 app = Flask(__name__)
+
+if gpm.do_credentials_exist():
+    print("Credentials already exist, creating GPM client")
+    GPM = gpm.Client()
 
 def crossdomain(origin="*"):
     def get_methods():
@@ -36,6 +42,24 @@ def add_to_playlist(playlist_id):
     body = request.get_json()
     video_url = body["video_url"]
     gpm.download_and_upload_song(video_url, body["metadata"])
+    return "OK", 200
+
+@app.route("/auth", methods=["GET"])
+def authenticate_music_manager():
+    flow = gpm.get_oauth_flow()
+    return redirect(flow.step1_get_authorize_url())
+
+@app.route("/auth/exchange", methods=["POST"])
+def exchange_oauth_token():
+    global GPM
+    token = request.get_json()["token"]
+    flow = gpm.get_oauth_flow()
+    credentials = flow.step2_exchange(token)
+    storage = oauth2client.file.Storage(config.OAUTH_CREDENTIAL_PATH)
+    storage.put(credentials)
+    print("Wrote credentials to {}".format(config.OAUTH_CREDENTIAL_PATH))
+    print("Creating GPM client")
+    GPM = gpm.Client()
     return "OK", 200
 
 def error(message, status_code):
