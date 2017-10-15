@@ -34,14 +34,14 @@ def crossdomain(origin="*"):
 @app.route("/playlists", methods=["GET"])
 @crossdomain()
 def get_playlists():
-    return json.dumps({"playlists": gpm.get_playlists()}), 200
+    return json.dumps({"playlists": GPM.get_playlists()}), 200
 
 @app.route("/playlists/<playlist_id>/add", methods=["POST", "OPTIONS"])
 @crossdomain()
 def add_to_playlist(playlist_id):
     body = request.get_json()
     video_url = body["video_url"]
-    gpm.download_and_upload_song(video_url, body["metadata"])
+    GPM.download_and_upload_song(video_url, body["metadata"])
     return "OK", 200
 
 @app.route("/auth", methods=["GET"])
@@ -50,6 +50,7 @@ def authenticate_music_manager():
     return redirect(flow.step1_get_authorize_url())
 
 @app.route("/auth/exchange", methods=["POST"])
+@crossdomain()
 def exchange_oauth_token():
     global GPM
     token = request.get_json()["token"]
@@ -57,8 +58,8 @@ def exchange_oauth_token():
     credentials = flow.step2_exchange(token)
     storage = oauth2client.file.Storage(config.OAUTH_CREDENTIAL_PATH)
     storage.put(credentials)
-    print("Wrote credentials to {}".format(config.OAUTH_CREDENTIAL_PATH))
-    print("Creating GPM client")
+    app.logger.info("Wrote credentials to {}".format(config.OAUTH_CREDENTIAL_PATH))
+    app.logger.info("Creating GPM client")
     GPM = gpm.Client()
     return "OK", 200
 
@@ -71,4 +72,4 @@ def error(message, status_code):
     return json.dumps(body), status_code
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host=os.environ.get("HOST", "127.0.0.1"))
