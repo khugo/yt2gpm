@@ -8,9 +8,18 @@ import config
 
 app = Flask(__name__)
 
-if gpm.do_credentials_exist():
-    print("Credentials already exist, creating GPM client")
-    GPM = gpm.Client()
+GPM = None
+
+def get_client():
+    global GPM
+    if not GPM:
+        if gpm.do_credentials_exist():
+            print("Credentials exist, creating GPM client")
+            app.logger.info("Credentials exist, creating GPM client")
+            GPM = gpm.Client()
+        else:
+            raise Exception("Credentials don't exist")
+    return GPM
 
 def crossdomain(origin="*"):
     def get_methods():
@@ -34,15 +43,17 @@ def crossdomain(origin="*"):
 @app.route("/playlists", methods=["GET"])
 @crossdomain()
 def get_playlists():
-    return json.dumps({"playlists": GPM.get_playlists()}), 200
+    gpm_client = get_client()
+    return json.dumps({"playlists": gpm_client.get_playlists()}), 200
 
 @app.route("/playlists/<playlist_id>/add", methods=["POST", "OPTIONS"])
 @crossdomain()
 def add_to_playlist(playlist_id):
     body = request.get_json()
     video_url = body["video_url"]
-    song_id = GPM.download_and_upload_song(video_url, body["metadata"])
-    GPM.add_song_to_playlist(playlist_id, song_id)
+    gpm_client = get_client()
+    song_id = gpm_client.download_and_upload_song(video_url, body["metadata"])
+    gpm_client.add_song_to_playlist(playlist_id, song_id)
     return "OK", 200
 
 @app.route("/auth", methods=["GET"])
@@ -53,15 +64,12 @@ def authenticate_music_manager():
 @app.route("/auth/exchange", methods=["POST"])
 @crossdomain()
 def exchange_oauth_token():
-    global GPM
     token = request.get_json()["token"]
     flow = gpm.get_oauth_flow()
     credentials = flow.step2_exchange(token)
     storage = oauth2client.file.Storage(config.OAUTH_CREDENTIAL_PATH)
     storage.put(credentials)
     app.logger.info("Wrote credentials to {}".format(config.OAUTH_CREDENTIAL_PATH))
-    app.logger.info("Creating GPM client")
-    GPM = gpm.Client()
     return "OK", 200
 
 def error(message, status_code):
