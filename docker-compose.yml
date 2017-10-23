@@ -10,3 +10,5 @@ services:
       - .:/app
     environment:
       - HOST=0.0.0.0
+    env_file:
+      - ./.creds
