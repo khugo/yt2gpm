@@ -5,6 +5,7 @@ venv/
 build/
 node_modules/
 oauth.cred
+.creds
 
 # Created by https://www.gitignore.io/api/python
 

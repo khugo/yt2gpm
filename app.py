@@ -41,7 +41,8 @@ def get_playlists():
 def add_to_playlist(playlist_id):
     body = request.get_json()
     video_url = body["video_url"]
-    GPM.download_and_upload_song(video_url, body["metadata"])
+    song_id = GPM.download_and_upload_song(video_url, body["metadata"])
+    GPM.add_song_to_playlist(playlist_id, song_id)
     return "OK", 200
 
 @app.route("/auth", methods=["GET"])

@@ -19,6 +19,7 @@ class Client:
                                Mobileclient.FROM_MAC_ADDRESS)
         if not success:
             raise Exception("Failed to login API client")
+        print("Logged in API client")
         return client
 
     def create_music_manager(self):
@@ -26,12 +27,17 @@ class Client:
         success = music_manager.login(oauth_credentials=config.OAUTH_CREDENTIAL_PATH)
         if not success:
             raise Exception("Failed to login music manager")
+        print("Logged in music manager")
         return music_manager
 
     def download_and_upload_song(self, youtube_url, metadata = {}):
         print(youtube_url)
         song_path = self.download_song(youtube_url, metadata)
-        filename = os.path.basename(song_path)
+        uploaded, _, not_uploaded = self.music_manager.upload(song_path)
+        if not_uploaded:
+            raise Exception("Song upload failed: {}".format(list(not_uploaded.values())[0]))
+        song_id = list(uploaded.values())[0]
+        return song_id
 
     def download_song(self, youtube_url, metadata):
         file_id = uuid.uuid4()
@@ -59,26 +65,9 @@ class Client:
             ydl.download([youtube_url])
         return "./tmp/{}.mp3".format(file_id)
 
-    def poll_for_song(self, title, artist):
-        attempts = 0
-        max_attempts = 10
-        song = self.find_song_from_library(title, artist)
-        while song is None:
-            if attempts > max_attempts:
-                raise Exception("Failed to find uploaded song from library")
-            time.sleep(1)
-            attempts = attempts + 1
-            song = self.find_song_from_library(title, artist)
-        return song
-
-    def find_song_from_library(self, title, artist):
-        print("Checking if songs exists {} - {}".format(title, artist))
-        songs = self.api_client.get_all_songs()
-        matching = [s for s in songs if s["title"] == title and s["artist"] == artist]
-        return matching[0] if len(matching) > 0 else None
-
-    def add_song_to_playlist(self, playlist_id, song):
-        self.api_client.add_songs_to_playlist(playlist_id, song["id"])
+    def add_song_to_playlist(self, playlist_id, song_id):
+        print("Adding song {} to playlist {}".format(playlist_id, song_id))
+        self.api_client.add_songs_to_playlist(playlist_id, song_id)
 
     def get_playlists(self):
         return self.api_client.get_all_playlists()
