@@ -6,19 +6,14 @@ import LoadingSpinner from "../LoadingSpinner";
 import { addToPlaylist } from "../../api";
 
 const AddToPlaylist = props => {
-  return (
-    <span>
-    {props.loading ? <LoadingSpinner/> :
-      <div>
+  return props.loading ? <LoadingSpinner label="Adding song to playlist"/> :
+      <div className="form-container">
         <EditSongForm/>
-        <div>
-          <button className="action" onClick={props.submit.bind(null, props.playlistId, props.url, props.title, props.artist)}>Add to playlist</button>
+        <div className="buttons">
+          <button className="action primary" onClick={props.submit.bind(null, props.playlistId, props.url, props.title, props.artist)}>Add to playlist</button>
           <button className="action" onClick={props.goBackToPlaylists}>Back to playlists</button>
         </div>
       </div>
-    }
-    </span>
-  )
 };
 
 const mapStateToProps = ({ selectedPlaylist, url, title, artist, loading }) => ({
