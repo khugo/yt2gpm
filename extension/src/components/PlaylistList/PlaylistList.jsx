@@ -13,7 +13,7 @@ class PlaylistList extends React.Component {
     const content = this.props.playlists.map(p => <h2 className="playlist" key={p.id} onClick={this.props.selectPlaylist.bind(null, p)}>{p.name}</h2>)
     return (
       <div>
-        {this.props.loading ? <LoadingSpinner/> : content}
+        {this.props.loading ? <LoadingSpinner label="Fetching playlists"/> : content}
       </div>
     );
   }

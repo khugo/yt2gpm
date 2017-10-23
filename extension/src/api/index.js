@@ -1,4 +1,4 @@
-const ROOT_URL = "http://localhost:5000";
+const ROOT_URL = "http://yt2gpm.herokuapp.com";
 
 export const addToPlaylist = (playlistId, videoUrl, title, artist) => {
   const opts = {
