@@ -56,13 +56,13 @@ def add_to_playlist(playlist_id):
     gpm_client.add_song_to_playlist(playlist_id, song_id)
     return "OK", 200
 
-@app.route("/download", methods=["POST"])
+@app.route("/download", methods=["POST", "OPTIONS"])
 @crossdomain()
 def download():
     body = request.get_json()
     video_url = body["video_url"]
     filename = os.path.basename(gpm.download_song(video_url, body["metadata"]))
-    return redirect("/songs/{}".format(filename))
+    return "/songs/{}".format(filename)
 
 @app.route("/songs/<filename>", methods=["GET"])
 @crossdomain()
