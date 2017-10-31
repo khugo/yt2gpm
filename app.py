@@ -61,9 +61,16 @@ def add_to_playlist(playlist_id):
 def download():
     body = request.get_json()
     video_url = body["video_url"]
-    filepath = os.path.join(app.root_path, gpm.download_song(video_url, body["metadata"]))
+    filename = os.path.basename(gpm.download_song(video_url, body["metadata"]))
+    return redirect("/songs/{}".format(filename))
+
+@app.route("/songs/<filename>", methods=["GET"])
+@crossdomain()
+def get_song_file(filename):
+    filepath = os.path.join(app.root_path, "./tmp/{}".format(filename))
     resp = send_file(filepath)
     resp.headers["Content-Type"] = "audio/mp3"
+    resp.headers["Content-Disposition"] = "attachment; filename=\"{}\"".format(filename)
     return resp
 
 @app.route("/auth", methods=["GET"])
