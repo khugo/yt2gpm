@@ -32,38 +32,12 @@ class Client:
 
     def download_and_upload_song(self, youtube_url, metadata = {}):
         print(youtube_url)
-        song_path = self.download_song(youtube_url, metadata)
+        song_path = download_song(youtube_url, metadata)
         uploaded, _, not_uploaded = self.music_manager.upload(song_path)
         if not_uploaded:
             raise Exception("Song upload failed: {}".format(list(not_uploaded.values())[0]))
         song_id = list(uploaded.values())[0]
         return song_id
-
-    def download_song(self, youtube_url, metadata):
-        file_id = uuid.uuid4()
-        filename = "./tmp/{}.%(ext)s".format(file_id)
-        dl_opts = {
-            "format": "bestaudio",
-            "outtmpl": filename,
-            "postprocessors": [
-                {
-                    "key": "FFmpegExtractAudio",
-                    "preferredcodec": "mp3",
-                    "preferredquality": "192"
-                },
-                {
-                    "key": "FFmpegMetadata",
-                    "metadata": {
-                        "title": metadata["title"],
-                        "artist": metadata["artist"]
-                    }
-                }
-            ]
-        }
-        print("Downloading song {}".format(youtube_url))
-        with youtube_dl.YoutubeDL(dl_opts) as ydl:
-            ydl.download([youtube_url])
-        return "./tmp/{}.mp3".format(file_id)
 
     def add_song_to_playlist(self, playlist_id, song_id):
         print("Adding song {} to playlist {}".format(playlist_id, song_id))
@@ -77,3 +51,29 @@ def get_oauth_flow():
 
 def do_credentials_exist():
     return os.path.isfile(config.OAUTH_CREDENTIAL_PATH)
+
+def download_song(youtube_url, metadata):
+    file_id = uuid.uuid4()
+    filename = "./tmp/{}.%(ext)s".format(file_id)
+    dl_opts = {
+        "format": "bestaudio",
+        "outtmpl": filename,
+        "postprocessors": [
+            {
+                "key": "FFmpegExtractAudio",
+                "preferredcodec": "mp3",
+                "preferredquality": "192"
+            },
+            {
+                "key": "FFmpegMetadata",
+                "metadata": {
+                    "title": metadata["title"],
+                    "artist": metadata["artist"]
+                }
+            }
+        ]
+    }
+    print("Downloading song {}".format(youtube_url))
+    with youtube_dl.YoutubeDL(dl_opts) as ydl:
+        ydl.download([youtube_url])
+    return "./tmp/{}.mp3".format(file_id)

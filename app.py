@@ -1,7 +1,7 @@
 import json
 import os
 from functools import update_wrapper
-from flask import Flask, request, make_response, current_app, redirect
+from flask import Flask, request, make_response, current_app, redirect, send_file
 import oauth2client
 import gpm
 import config
@@ -55,6 +55,16 @@ def add_to_playlist(playlist_id):
     song_id = gpm_client.download_and_upload_song(video_url, body["metadata"])
     gpm_client.add_song_to_playlist(playlist_id, song_id)
     return "OK", 200
+
+@app.route("/download", methods=["POST"])
+@crossdomain()
+def download():
+    body = request.get_json()
+    video_url = body["video_url"]
+    filepath = os.path.join(app.root_path, gpm.download_song(video_url, body["metadata"]))
+    resp = send_file(filepath)
+    resp.headers["Content-Type"] = "audio/mp3"
+    return resp
 
 @app.route("/auth", methods=["GET"])
 def authenticate_music_manager():
