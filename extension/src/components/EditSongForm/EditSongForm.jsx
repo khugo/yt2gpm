@@ -2,24 +2,12 @@ import React from "react";
 import { connect } from "react-redux";
 import { SET_VIDEO_TITLE, SET_VIDEO_ARTIST } from "../../reducers";
 
-const renderInput = ({ input, label, type, meta: { touched, error, warning } }) => (
-  <div>
-    <label>{label}</label>
-    <div>
-      <input {...input} placeholder={label} type={type} />
-      {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
-    </div>
-  </div>
-);
-
 const EditSongForm = props => {
   return (
     <form>
       <label>
         Title
-        <input type="text" placeholder="Title" value={props.title} onChange={props.setTitle}/>
+        <input type="text" placeholder="Title" value={props.title} onChange={props.setTitle} autoFocus/>
       </label>
       <label>
         Artist
