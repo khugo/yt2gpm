@@ -16,6 +16,11 @@ export const getVideoUrl = async () => {
   return tab.url;
 };
 
+export const downloadFile = async fileUrl => {
+  const tab = await getActiveTab();
+  chrome.tabs.executeScript(tab.id, { code: `window.location = "${fileUrl}";` });
+};
+
 const getActiveTab = () => {
   return new Promise(resolve => {
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {

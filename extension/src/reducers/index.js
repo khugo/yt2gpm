@@ -15,7 +15,11 @@ export const ADD_TO_PLAYLIST = "ADD_TO_PLAYLIST";
 export const ADD_TO_PLAYLIST_SUCCESS = "ADD_TO_PLAYLIST_SUCCESS";
 export const ADD_TO_PLAYLIST_ERROR = "ADD_TO_PLAYLIST_ERROR";
 
-const navigation = (state = "playlists", action) => {
+export const DOWNLOAD = "DOWNLOAD";
+export const DOWNLOAD_SUCCESS = "DOWNLOAD_SUCCESS";
+export const DOWNLOAD_ERROR = "DOWNLOAD_ERROR";
+
+const navigation = (state = "download_song", action) => {
   console.log(action);
   switch (action.type) {
     case NAVIGATE_TO:
@@ -44,10 +48,13 @@ const loading = (state = false, action) => {
   switch (action.type) {
     case ADD_TO_PLAYLIST:
     case FETCH_PLAYLISTS:
-      return true;
+      case DOWNLOAD:
+    return true;
     case ADD_TO_PLAYLIST_SUCCESS:
     case ADD_TO_PLAYLIST_ERROR:
     case FETCH_PLAYLISTS_SUCCESS:
+    case DOWNLOAD_SUCCESS:
+    case DOWNLOAD_ERROR:
       return false;
   }
   return state;
